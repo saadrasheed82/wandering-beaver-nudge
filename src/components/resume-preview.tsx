@@ -4,17 +4,17 @@ import { Button } from "@/components/ui/button";
 import { useReactToPrint } from "react-to-print";
 import { useRef } from "react";
 
-type ResumeData = {
-  // ... (keep all existing type definitions)
-};
-
-export function ResumePreview({ resumeData }: { resumeData: ResumeData }) {
+export function ResumePreview({ resumeData }: { resumeData: any }) {
   const resumeRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = useReactToPrint({
     content: () => resumeRef.current,
-    documentTitle: "resume",
-    removeAfterPrint: true
+    pageStyle: `
+      @page { size: A4; margin: 1cm; }
+      @media print {
+        body { -webkit-print-color-adjust: exact; }
+      }
+    `
   });
 
   return (
@@ -22,9 +22,8 @@ export function ResumePreview({ resumeData }: { resumeData: ResumeData }) {
       <div className="flex justify-end">
         <Button onClick={handlePrint}>Download PDF</Button>
       </div>
-      
-      <div ref={resumeRef} className="bg-white p-8 rounded shadow max-w-4xl mx-auto">
-        {/* ... rest of the preview content ... */}
+      <div ref={resumeRef}>
+        {/* Preview content */}
       </div>
     </div>
   );
